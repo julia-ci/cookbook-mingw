@@ -40,4 +40,17 @@ env "PATH" do
   action :modify
   delim File::PATH_SEPARATOR
   value "#{node[:mingw][:dir]}\\bin"
+  only_if { true }
+end
+
+ENV["PATH"] += ";#{node[:mingw][:dir]}\\bin"
+
+execute "install g++" do
+  command "mingw-get install mingw32-gcc-g++"
+  not_if { File.exists?("#{node[:mingw][:dir]}\\bin\\g++.exe") }
+end
+
+execute "install gfortran" do
+  command "mingw-get install mingw32-gcc-fortran"
+  not_if { File.exists?("#{node[:mingw][:dir]}\\bin\\gfortran.exe") }
 end
